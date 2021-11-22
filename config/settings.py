@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'apps.users',
 ]
 
-#Change User Auth
+# Change User Auth
 AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
@@ -59,9 +59,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    #Cors
+    # Cors
     'corsheaders.middleware.CorsMiddleware',
 ]
+
+# Setting Caching using memcached
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
 # Setting Cors
 CORS_ORIGIN_ALLOW_ALL = True

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from apps.friends.urls import routes as friends_routes
 from apps.users.urls import routes as users_routes
-from apps.friends.views import APIListFriendsView,APIAddFriendView,APIUpdateFriendView,APIDeleteFriendView
+from apps.friends.views import APIFriendsView,APIUpdateFriendView
 from apps.users.views import LogInView
 from rest_framework.routers import DefaultRouter
 from django.urls import include
@@ -35,9 +35,7 @@ for routes in api_routes:
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
-    path('login/',LogInView.as_view()),
-    path('friends/',APIListFriendsView.as_view()),
-    path('add-friends/',APIAddFriendView.as_view()),
-    path('friend/<int:pk>/',APIUpdateFriendView.as_view()),
-    path('delete-friends/<int:pk>/',APIDeleteFriendView.as_view()),
+    path('login/',LogInView.as_view(),name='login'),
+    path('friends/',APIFriendsView.as_view(),name='friends'),
+    path('friend/<int:pk>/',APIUpdateFriendView.as_view(),name='update_friend'),
 ]
