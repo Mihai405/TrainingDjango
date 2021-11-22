@@ -4,7 +4,6 @@ from .serializer import RegisterSerializer , LogInSerializer
 from rest_framework.views import APIView
 from .models import User
 from rest_framework.exceptions import AuthenticationFailed
-import jwt
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from custom.auth import encode_session_user,decode_session_user,delete_session_user
@@ -19,7 +18,6 @@ class LogInViewset(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = LogInSerializer
 
-
     @action(detail=False,methods=['post'])
     def login(self,request):
         email = request.data['email']
@@ -32,11 +30,6 @@ class LogInViewset(viewsets.ModelViewSet):
             raise AuthenticationFailed("Invalid password")
         token=encode_session_user(request,user.id)
         return Response({"token": token,"email":user.email})
-
-
-    @action(detail=False , methods=['post'])
-    def logout(self,request):
-        return Response("Clear Session")
 
 class LogInView(APIView):
      def post(self,request):
