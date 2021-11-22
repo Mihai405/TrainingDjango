@@ -7,6 +7,9 @@ from rest_framework.exceptions import AuthenticationFailed
 import jwt
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from custom.auth import encode_session_user,decode_session_user,delete_session_user
+from rest_framework import exceptions
+from rest_framework import status
 
 class RegisterView(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -27,12 +30,10 @@ class LogInViewset(viewsets.ModelViewSet):
             raise AuthenticationFailed('User not found')
         if not user.check_password(password):
             raise AuthenticationFailed("Invalid password")
-        payload = {
-            'id': user.id,
-        }
-        token = jwt.encode(payload, 'secret', algorithm='HS256')
-        request.session["user"]=token
+        token=encode_session_user(request,user.id)
         return Response({"token": token,"email":user.email})
+
+
     @action(detail=False , methods=['post'])
     def logout(self,request):
         return Response("Clear Session")
@@ -47,10 +48,14 @@ class LogInView(APIView):
              raise AuthenticationFailed('User not found')
          if not user.check_password(password):
              raise AuthenticationFailed("Invalid password")
-         payload={
-            'id':user.id,
-         }
-         token = jwt.encode(payload, 'secret', algorithm='HS256')
-         request.session["user"] = token
-         decode_token = jwt.decode(token,'secret',algorithms=["HS256"])
-         return Response({"token":request.session["user"]})
+         token = encode_session_user(request, user.id)
+         return Response({"token": token, "email": user.email})
+
+class LogOutView(APIView):
+    def delete(self,request):
+        try:
+            user = decode_session_user(request)
+        except exceptions.AuthenticationFailed:
+            return Response("Unauthenticated", status=status.HTTP_401_UNAUTHORIZED)
+        delete_session_user(request)
+        return Response("LogOut",status=status.HTTP_200_OK)

@@ -8,69 +8,80 @@ from .models import Friend
 from rest_framework import status
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_cookie
+from django.views.decorators.vary import vary_on_cookie,vary_on_headers
 from apps.users.models import User
-import jwt
+from custom.auth import decode_session_user
+from rest_framework import exceptions
+
 
 class FriendsView(viewsets.ModelViewSet):
 
     queryset = Friend.objects.all()
     serializer_class = FriendSerializer
 
-@method_decorator(cache_page(60), name='dispatch')
+@method_decorator(cache_page(60*5), name='dispatch')
 @method_decorator(vary_on_cookie,name='dispatch')
 class APIFriendsView(APIView):
     def get(self,request):
-        friends_list=[]
-        token=request.session.get('user',None)
-        if not token:
-            return Response("Unauthenticated",status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        decode_token = jwt.decode(token, 'secret', algorithms=["HS256"])
-        user=User.objects.get(id=decode_token['id'])
-        for friend in Friend.objects.filter(user=user):
-            serializer=FriendSerializer(friend)
-            friends_list.append(serializer.data)
-        return Response(friends_list)
+        try:
+            user=decode_session_user(request)
+        except exceptions.AuthenticationFailed:
+            return Response("Unauthenticated", status=status.HTTP_401_UNAUTHORIZED)
+        friends=Friend.objects.filter(user=user)
+        serializer=FriendSerializer(friends,many=True)
+        return Response(serializer.data)
 
     def post(self,request):
-        token = request.session.get('user', None)
-        if not token:
-            return Response("Unauthenticated", status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        decode_token = jwt.decode(token, 'secret', algorithms=["HS256"])
-        user = User.objects.get(id=decode_token['id'])
+        try:
+            user=decode_session_user(request)
+        except exceptions.AuthenticationFailed:
+            return Response("Unauthenticated", status=status.HTTP_401_UNAUTHORIZED)
         serializer=FriendSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-@method_decorator(cache_page(60),name='dispatch')
+@method_decorator(cache_page(60*5),name='dispatch')
+@method_decorator(vary_on_cookie,name='dispatch')
 class APIUpdateFriendView(APIView):
-    def put(self,request,pk):
-        token = request.session.get('user', None)
-        if not token:
-            return Response("Unauthenticated", status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        decode_token = jwt.decode(token, 'secret', algorithms=["HS256"])
-        user = User.objects.get(id=decode_token['id'])
+
+    def get(self,request,pk):
+        try:
+            user = decode_session_user(request)
+        except exceptions.AuthenticationFailed:
+            return Response("Unauthenticated", status=status.HTTP_401_UNAUTHORIZED)
         try:
             friend=Friend.objects.get(id=pk)
         except Friend.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        else:
-            serializer=FriendSerializer(friend,data=request.data)
-            if serializer.is_valid():
-                serializer.save(user=user)
-                return Response(serializer.data)
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response("Object not Found",status=status.HTTP_404_NOT_FOUND)
+        serializer=FriendSerializer(friend)
+        return Response(serializer.data)
+
+    def put(self,request,pk):
+        try:
+            user = decode_session_user(request)
+        except exceptions.AuthenticationFailed:
+            return Response("Unauthenticated", status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            friend = Friend.objects.get(id=pk)
+        except Friend.DoesNotExist:
+            return Response("Object not Found",status=status.HTTP_404_NOT_FOUND)
+        serializer=FriendSerializer(friend,data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user)
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request,pk):
-        token = request.session.get('user', None)
-        if not token:
-            return Response("Unauthenticated", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        try:
+            user = decode_session_user(request)
+        except exceptions.AuthenticationFailed:
+            return Response("Unauthenticated", status=status.HTTP_401_UNAUTHORIZED)
         try:
             friend=Friend.objects.get(id=pk)
         except Friend.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response("Object not Found",status=status.HTTP_404_NOT_FOUND)
         else:
             friend.delete()
             return Response({"Delete":"Success"},status=status.HTTP_204_NO_CONTENT)
