@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
     'corsheaders',
-
+    
     # Local
     'apps.friends',
     'apps.users',
@@ -62,6 +62,7 @@ MIDDLEWARE = [
     # Cors
     'corsheaders.middleware.CorsMiddleware',
 ]
+
 
 # Setting Caching using memcached
 CACHES = {
