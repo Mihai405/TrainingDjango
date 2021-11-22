@@ -51,5 +51,6 @@ class LogInView(APIView):
             'id':user.id,
          }
          token = jwt.encode(payload, 'secret', algorithm='HS256')
+         request.session["user"] = token
          decode_token = jwt.decode(token,'secret',algorithms=["HS256"])
          return Response({"token":request.session["user"]})
