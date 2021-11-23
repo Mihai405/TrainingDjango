@@ -29,15 +29,15 @@ class SessionAuthTest(TestCase):
             "password": "mihai"
         }
 
-    def test_create_logIn_token(self):
-        response = client.post(reverse('login'), data=json.dumps(self.valid_payload), content_type='application/json')
+    def test_create_auth_token(self):
+        response = client.post(reverse('auth'), data=json.dumps(self.valid_payload), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_delete_logIn_token(self):
-        response = client.post(reverse('login'), data=json.dumps(self.valid_payload), content_type='application/json')
-        response = client.delete(reverse('logout'))
+    def test_delete_auth_token(self):
+        response = client.post(reverse('auth'), data=json.dumps(self.valid_payload), content_type='application/json')
+        response = client.delete(reverse('auth'))
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
-        response = client.delete(reverse('logout'))
+        response = client.delete(reverse('auth'))
         self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
 
 class ListUsersTest(TestCase):

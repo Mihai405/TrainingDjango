@@ -27,7 +27,7 @@ class GetAllFriendsTest(TestCase):
             "email": "mihai@yahoo.com",
             "password": "mihai"
         }
-        response = client.post(reverse('login'), data=json.dumps(self.valid_payload), content_type='application/json')
+        response = client.post(reverse('auth'), data=json.dumps(self.valid_payload), content_type='application/json')
 
         Friend.objects.create(
             first_name='User1', last_name='User1', phone_number='073457891', user=self.user)
@@ -60,7 +60,7 @@ class CreateNewFriendTest(TestCase):
             "email": "mihai@yahoo.com",
             "password": "mihai"
         }
-        response = client.post(reverse('login'), data=json.dumps(self.valid_payload), content_type='application/json')
+        response = client.post(reverse('auth'), data=json.dumps(self.valid_payload), content_type='application/json')
 
         self.valid_friend_payload = {
             "first_name": "New User",
@@ -101,7 +101,7 @@ class UpdateFriendTest(TestCase):
             "email": "mihai@yahoo.com",
             "password": "mihai"
         }
-        response = client.post(reverse('login'), data=json.dumps(self.valid_payload),content_type='application/json')
+        response = client.post(reverse('auth'), data=json.dumps(self.valid_payload),content_type='application/json')
 
         self.friend=Friend.objects.create(
             first_name='User1', last_name='User1', phone_number='073457891', user=self.user)
@@ -146,7 +146,7 @@ class DeleteFriendTest(TestCase):
             "email": "mihai@yahoo.com",
             "password": "mihai"
         }
-        response = client.post(reverse('login'), data=json.dumps(self.valid_payload),content_type='application/json')
+        response = client.post(reverse('auth'), data=json.dumps(self.valid_payload),content_type='application/json')
 
         self.friend=Friend.objects.create(
             first_name='User1', last_name='User1', phone_number='073457891', user=self.user)

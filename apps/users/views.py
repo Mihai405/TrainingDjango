@@ -14,7 +14,7 @@ class RegisterView(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
-class LogInView(APIView):
+class AuthView(APIView):
     @swagger_auto_schema(operation_description="This API is used to Log In a user",
         request_body=LogInSerializer,responses={200:"{token:user token , email:user email}"})
     def post(self,request):
@@ -29,7 +29,6 @@ class LogInView(APIView):
          token = encode_session_user(request, user.id)
          return Response({"token": token, "email": user.email})
 
-class LogOutView(APIView):
     @swagger_auto_schema(operation_description="This API is used to Log Out a user")
     def delete(self,request):
         try:
