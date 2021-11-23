@@ -37,4 +37,4 @@ class LogOutView(APIView):
         except exceptions.AuthenticationFailed:
             return Response("Unauthenticated", status=status.HTTP_401_UNAUTHORIZED)
         delete_session_user(request)
-        return Response("LogOut",status=status.HTTP_200_OK)
+        return Response("LogOut",status=status.HTTP_204_NO_CONTENT)

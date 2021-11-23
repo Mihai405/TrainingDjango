@@ -5,7 +5,6 @@ from django.urls import reverse
 from apps.friends.models import Friend
 from apps.friends.serializers import FriendSerializer
 from apps.users.models import User
-import jwt
 
 # initialize the APIClient app
 client = Client()
@@ -23,24 +22,6 @@ class GetAllFriendsTest(TestCase):
                                    last_name="mihai2")
         user2.set_password("mihai")
         user2.save()
-
-        """
-        payload = {
-            'id': user.id,
-        }
-
-        token = jwt.encode(payload, 'secret', algorithm='HS256')
-        session = self.client.session
-        session["user"]= token
-        session.save()
-        
-        self.valid_payload = {
-            "email": "mihai@yahoo.com",
-            "password": "mihai"
-        }
-        response = client.post(reverse('login'), data=json.dumps(self.valid_payload), content_type='application/json')
-        
-        """
 
         self.valid_payload = {
             "email": "mihai@yahoo.com",

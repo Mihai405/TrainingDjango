@@ -17,7 +17,7 @@ class FriendTest(TestCase):
         friend1=Friend.objects.get(id=1)
         friend2=Friend.objects.get(id=2)
         self.assertEqual(friend1.first_name,'User1')
-        self.assertNotEqual(friend1.last_name,'User12')
+        self.assertNotEqual(friend1.first_name,'User12')
         self.assertEqual(friend2.first_name,'User2')
 
     def test_last_name(self):
