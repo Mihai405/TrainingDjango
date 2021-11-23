@@ -18,7 +18,7 @@ from django.urls import path
 from apps.friends.urls import routes as friends_routes
 from apps.users.urls import routes as users_routes
 from apps.friends.views import APIFriendsView,APIUpdateFriendView
-from apps.users.views import LogInView,LogOutView
+from apps.users.views import AuthView
 from rest_framework.routers import DefaultRouter
 from django.urls import include
 from rest_framework import permissions
@@ -49,8 +49,7 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
-    path('login/',LogInView.as_view(),name='login'),
-    path('logout/',LogOutView.as_view(),name='logout'),
+    path('auth/',AuthView.as_view(),name='auth'),
     path('friends/',APIFriendsView.as_view(),name='friends'),
     path('friend/<int:pk>/',APIUpdateFriendView.as_view(),name='update_friend'),
 ]
