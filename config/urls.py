@@ -21,6 +21,22 @@ from apps.friends.views import APIFriendsView,APIUpdateFriendView
 from apps.users.views import LogInView,LogOutView
 from rest_framework.routers import DefaultRouter
 from django.urls import include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Friends API",
+      default_version='v1',
+      description="Api description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 api_routes=[]
 api_routes.append(friends_routes)
@@ -33,6 +49,7 @@ for routes in api_routes:
         router.register(r[0],r[1])
 
 urlpatterns = [
+    path(r'', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
     path('login/',LogInView.as_view(),name='login'),

@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
     'corsheaders',
-    
+    'drf_yasg',
+
     # Local
     'apps.friends',
     'apps.users',
