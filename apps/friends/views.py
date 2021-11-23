@@ -8,11 +8,11 @@ from .models import Friend
 from rest_framework import status
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_cookie,vary_on_headers
+from django.views.decorators.vary import vary_on_cookie
 from apps.users.models import User
 from custom.auth import decode_session_user
 from rest_framework import exceptions
-
+from drf_yasg.utils import swagger_auto_schema
 
 class FriendsView(viewsets.ModelViewSet):
 
@@ -22,6 +22,8 @@ class FriendsView(viewsets.ModelViewSet):
 @method_decorator(cache_page(60*5), name='dispatch')
 @method_decorator(vary_on_cookie,name='dispatch')
 class APIFriendsView(APIView):
+
+    @swagger_auto_schema(responses={200: FriendSerializer(many=True)})
     def get(self,request):
         try:
             user=decode_session_user(request)
@@ -31,6 +33,8 @@ class APIFriendsView(APIView):
         serializer=FriendSerializer(friends,many=True)
         return Response(serializer.data)
 
+
+    @swagger_auto_schema(request_body=FriendSerializer)
     def post(self,request):
         try:
             user=decode_session_user(request)
@@ -46,6 +50,7 @@ class APIFriendsView(APIView):
 @method_decorator(vary_on_cookie,name='dispatch')
 class APIUpdateFriendView(APIView):
 
+    @swagger_auto_schema(responses={200: FriendSerializer()})
     def get(self,request,pk):
         try:
             user = decode_session_user(request)
@@ -58,6 +63,7 @@ class APIUpdateFriendView(APIView):
         serializer=FriendSerializer(friend)
         return Response(serializer.data)
 
+    @swagger_auto_schema(responses={200: FriendSerializer()}, request_body=FriendSerializer)
     def put(self,request,pk):
         try:
             user = decode_session_user(request)

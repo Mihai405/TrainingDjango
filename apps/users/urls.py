@@ -1,6 +1,5 @@
-from .views import RegisterView,LogInViewset
+from .views import RegisterView
 
 routes = [
     (r'register',RegisterView),
-    (r'login',LogInViewset),
 ]

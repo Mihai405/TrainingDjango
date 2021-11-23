@@ -29,10 +29,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Friends API",
       default_version='v1',
-      description="Api description",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
+      description="You should use Login View if you are Unauthenticated,in order to access the Views",
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
@@ -49,7 +46,7 @@ for routes in api_routes:
         router.register(r[0],r[1])
 
 urlpatterns = [
-    path(r'', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
     path('login/',LogInView.as_view(),name='login'),
