@@ -5,6 +5,9 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
+#Change default user model by using email,first_name,last_name
+#Also change UserManager and if we use default django auth system we will log in with email and password
+
 class UserManager(BaseUserManager):
 
     def create_user(self,email,password=None,**other_fields):

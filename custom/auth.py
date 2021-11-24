@@ -2,6 +2,7 @@ import jwt
 from apps.users.models import User
 from rest_framework import exceptions
 
+#used to identify a user based on a jwt_token
 def decode_session_user(request):
     token = request.session.get('user', None)
     if not token:
@@ -10,6 +11,7 @@ def decode_session_user(request):
     user = User.objects.get(id=decode_token['id'])
     return user
 
+#used to create a jwt_token for a user
 def encode_session_user(request,id):
     payload = {
         'id':id,
@@ -18,5 +20,6 @@ def encode_session_user(request,id):
     request.session["user"]=token
     return token
 
+#used log out the user
 def delete_session_user(request):
     request.session.flush()

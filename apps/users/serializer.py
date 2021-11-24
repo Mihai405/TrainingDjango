@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from .models import User
 
+#define Register and LogIn serializers
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model   =   User

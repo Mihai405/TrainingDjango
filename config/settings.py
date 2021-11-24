@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# I know that I should be very careful with secret key , I let it here for demo reasons
 SECRET_KEY = 'django-insecure-h!irsi2978l6gpk&7@wv)7dk&_#d(phyx+5+=*d6!@h_4z8t(*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
     'corsheaders',
-    'drf_yasg',
+    'drf_yasg',#swagger
 
     # Local
     'apps.friends',
@@ -99,6 +100,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#Use the default database , for this , I know it's not a good practice
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

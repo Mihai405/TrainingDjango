@@ -40,7 +40,7 @@ api_routes.append(friends_routes)
 api_routes.append(users_routes)
 
 router  =   DefaultRouter()
-
+#register the viewsets routes in router
 for routes in api_routes:
     for r in routes:
         router.register(r[0],r[1])
@@ -49,7 +49,7 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
-    path('auth/',AuthView.as_view(),name='auth'),
-    path('friends/',APIFriendsView.as_view(),name='friends'),
-    path('friend/<int:pk>/',APIUpdateFriendView.as_view(),name='update_friend'),
+    path('auth/',AuthView.as_view(),name='auth'), #login/logout
+    path('friends/',APIFriendsView.as_view(),name='friends'), #get/post friends
+    path('friend/<int:pk>/',APIUpdateFriendView.as_view(),name='update_friend'), #get/put/delete friend
 ]

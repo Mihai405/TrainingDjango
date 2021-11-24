@@ -14,17 +14,19 @@ from custom.auth import decode_session_user
 from rest_framework import exceptions
 from drf_yasg.utils import swagger_auto_schema
 
+#Used this FriendsView to see all friends created(Could be used for an admin role)
 class FriendsView(viewsets.ModelViewSet):
 
     queryset = Friend.objects.all()
     serializer_class = FriendSerializer
 
-@method_decorator(cache_page(60*5), name='dispatch')
-@method_decorator(vary_on_cookie,name='dispatch')
+@method_decorator(cache_page(60*5), name='dispatch') #cache the view
+@method_decorator(vary_on_cookie,name='dispatch') #remove the cached view if cookie changes
 class APIFriendsView(APIView):
 
     @swagger_auto_schema(responses={200: FriendSerializer(many=True)})
     def get(self,request):
+        #verify if a user is logged in and return his friends
         try:
             user=decode_session_user(request)
         except exceptions.AuthenticationFailed:
@@ -36,6 +38,7 @@ class APIFriendsView(APIView):
 
     @swagger_auto_schema(request_body=FriendSerializer)
     def post(self,request):
+        # verify if a user is logged in and add a new friend
         try:
             user=decode_session_user(request)
         except exceptions.AuthenticationFailed:
@@ -52,6 +55,7 @@ class APIUpdateFriendView(APIView):
 
     @swagger_auto_schema(responses={200: FriendSerializer()})
     def get(self,request,pk):
+        # verify if a user is logged in and return detail about one friend
         try:
             user = decode_session_user(request)
         except exceptions.AuthenticationFailed:
@@ -65,6 +69,7 @@ class APIUpdateFriendView(APIView):
 
     @swagger_auto_schema(responses={200: FriendSerializer()}, request_body=FriendSerializer)
     def put(self,request,pk):
+        # verify if a user is logged in and update the specified friend
         try:
             user = decode_session_user(request)
         except exceptions.AuthenticationFailed:
@@ -80,6 +85,7 @@ class APIUpdateFriendView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request,pk):
+        # verify if a user is logged in and delete the specified friend
         try:
             user = decode_session_user(request)
         except exceptions.AuthenticationFailed:
