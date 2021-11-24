@@ -41,10 +41,10 @@ Log Out: DELETE request on: localhost:8000/auth
 </div>
 
 <div>
- GET,POST request on: localhost:8000/friends< to get friends for a user , after the user has logged in
+ GET,POST request on: localhost:8000/friends to get friends for a user , after the user has logged in
 </div>
 
 <div>
-GET,PUT,DELETE on localhost:8000/friend/pk/ to uptate a friend from his friends list
+GET,PUT,DELETE on: localhost:8000/friend/pk/ to uptate a friend from his friends list
 </div>
 </div>
