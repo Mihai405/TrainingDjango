@@ -47,8 +47,7 @@ for routes in api_routes:
 
 urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('admin/', admin.site.urls),
-    path('api/',include(router.urls)),
+    path('api/',include(router.urls)),#api to see all users and all friends created
     path('auth/',AuthView.as_view(),name='auth'), #login/logout
     path('friends/',APIFriendsView.as_view(),name='friends'), #get/post friends
     path('friend/<int:pk>/',APIUpdateFriendView.as_view(),name='update_friend'), #get/put/delete friend
