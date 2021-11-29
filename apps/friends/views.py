@@ -47,7 +47,7 @@ class APIFriendsView(APIView):
         serializer=FriendSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
-            cache.clear()
+            cache.clear() #should clear the cache in order to refresh list view
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
