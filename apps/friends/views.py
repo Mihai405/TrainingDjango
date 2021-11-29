@@ -13,6 +13,7 @@ from apps.users.models import User
 from custom.auth import decode_session_user
 from rest_framework import exceptions
 from drf_yasg.utils import swagger_auto_schema
+from django.core.cache import cache
 
 #Used this FriendsView to see all friends created(Could be used for an admin role)
 class FriendsView(viewsets.ModelViewSet):
@@ -46,6 +47,7 @@ class APIFriendsView(APIView):
         serializer=FriendSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
+            cache.clear()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -81,6 +83,7 @@ class APIUpdateFriendView(APIView):
         serializer=FriendSerializer(friend,data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
+            cache.clear()
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -96,4 +99,5 @@ class APIUpdateFriendView(APIView):
             return Response("Object not Found",status=status.HTTP_404_NOT_FOUND)
         else:
             friend.delete()
+            cache.clear()
             return Response({"Delete":"Success"},status=status.HTTP_204_NO_CONTENT)
