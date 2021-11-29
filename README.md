@@ -32,9 +32,13 @@ In order to log in or log out you should go to: localhost:8000/auth
 Log In: POST request with {"email":"mihai@yahoo.com","password":"mihai"}(example with a defined user from db)
 </div>
 
+<br>
+
 <div>
 Log Out: DELETE request on: localhost:8000/auth
 </div>
+
+<br>
 
 <div>
 <h3>Auth required endpoints</h3>
@@ -50,6 +54,8 @@ As a user you want to see your friends list or to add a new friend to your list 
 </div>
 </div>
 
+<br>
+
 <div>
 As a user you want to update a friend details or delete a friend.You should be logged in to access this routes. 
 <div>
@@ -62,6 +68,8 @@ PUT request on: localhost:8000/friend/pk/ to update the specified friend
 DELETE request on: localhost:8000/friend/pk/ to delete the specified friend 
 </div>
 </div>
+
+<br>
 
 <div>
 If you want to see registration information , these are some provided information
@@ -78,6 +86,8 @@ PUT request on: http://localhost:8000/api/register/pk to update the user with pk
 POST request on: http://localhost:8000/api/register/pk to delete the user with pk=pk
 </div>
 </div>
+
+<br>
 
 <div>
 In app it's also a viewset that can provide information as for an admin: it shows all friends that were created : http://localhost:8000/api/friends/ , 
