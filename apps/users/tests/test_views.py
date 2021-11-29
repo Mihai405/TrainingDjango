@@ -84,11 +84,11 @@ class CreateUserTest(TestCase):
             "password": "user"
         }
 
-    def test_create_valid_user(self):
+    def test_create_valid_user(self): #verify response with valid input
         response = client.post(reverse('user-list'),data=json.dumps(self.valid_payload),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
 
-    def test_create_invalid_user(self):
+    def test_create_invalid_user(self): #verify response with invalid input
         response = client.post(reverse('user-list'), data=json.dumps(self.invalid_payload),
                                content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -101,6 +101,12 @@ class UpdateUserTest(TestCase):
         self.user.set_password("mihai")
         self.user.save()
 
+        self.user2 = User.objects.create(email="mihai2@yahoo.com",
+                                        first_name="mihai2",
+                                        last_name="mihai2", )
+        self.user2.set_password("mihai2")
+        self.user2.save()
+
         self.valid_payload = {
             "email": "new_user@yahoo.com",
             "first_name": "New",
@@ -108,13 +114,28 @@ class UpdateUserTest(TestCase):
             "password": "user"
         }
 
-    def test_update_valid_friend(self):
+        self.invalid_payload = {
+            "email": "mihai2@yahoo.com",  # same email as user 2
+            "first_name": "New",
+            "last_name": "user",
+            "password": "user"
+        }
+
+    def test_update_valid_friend(self): #verify response with valid input
         response = client.put(
             reverse('user-detail', kwargs={'pk': self.user.id}),
             data=json.dumps(self.valid_payload),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_invalid_friend(self): #verify response with invalid input
+        response = client.put(
+            reverse('user-detail', kwargs={'pk': self.user.id}),
+            data=json.dumps(self.invalid_payload),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 class DeleteUserTest(TestCase):
     def setUp(self):
@@ -124,11 +145,11 @@ class DeleteUserTest(TestCase):
         self.user.set_password("mihai")
         self.user.save()
 
-    def test_delete_valid_user(self):
+    def test_delete_valid_user(self): #verify response with valid input
         response = client.delete(
             reverse('user-detail', kwargs={'pk': self.user.id}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_delete_invalid_user(self):
+    def test_delete_invalid_user(self): #verify response with invalid input
         response = client.delete('user-detail', kwargs={'pk': 2})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

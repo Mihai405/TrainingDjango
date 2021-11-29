@@ -74,11 +74,11 @@ class CreateNewFriendTest(TestCase):
             "phone_number": "073457890"
         }
 
-    def test_create_valid_friend(self):
+    def test_create_valid_friend(self): #verify response with valid input
         response = client.post(reverse('friends'), data=json.dumps(self.valid_friend_payload), content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
 
-    def test_create_invalid_friend_phone_number(self):
+    def test_create_invalid_friend_phone_number(self): #verify response with invalid input
         response = client.post(reverse('friends'), data=json.dumps(self.invalid_friend_payload), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -119,7 +119,7 @@ class UpdateFriendTest(TestCase):
         }
 
 
-    def test_update_valid_friend(self):
+    def test_update_valid_friend(self): #verify response with valid input
         response = client.put(
             reverse('update_friend', kwargs={'pk': self.friend.id}),
             data=json.dumps(self.valid_friend_payload),
@@ -127,7 +127,7 @@ class UpdateFriendTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_update_invalid_friend(self):
+    def test_update_invalid_friend(self): #verify response with invalid input
         response = client.put(
             reverse('update_friend', kwargs={'pk': self.friend.id}),
             data=json.dumps(self.invalid_friend_payload),
@@ -155,12 +155,12 @@ class DeleteFriendTest(TestCase):
         self.friend = Friend.objects.create(
             first_name='User3', last_name='User3', phone_number='073457893', user=self.user)
 
-    def test_delete_valid_friend(self):
+    def test_delete_valid_friend(self): #verify response with valid input
         response = client.delete(
             reverse('update_friend', kwargs={'pk': self.friend.id}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_delete_invalid_friend(self):
+    def test_delete_invalid_friend(self): #verify response with invalid input
         response = client.delete(
             reverse('update_friend', kwargs={'pk':100}))
         self.assertEqual(response.status_code,status.HTTP_404_NOT_FOUND)
